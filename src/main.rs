@@ -7,6 +7,8 @@ use bird::Bird;
 mod pipe;
 use pipe::Pipe;
 
+mod neural_network;
+
 pub static WIDTH: u32 = 1280;
 pub static HEIGHT: u32 = 720;
 pub static GROUND_HEIGHT: u32 = (HEIGHT as f64 * 0.9) as u32;
