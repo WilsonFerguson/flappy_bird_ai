@@ -40,7 +40,7 @@ fn handle_birds(birds: &mut Vec<Bird>, pipes: &Vec<Pipe>) {
 }
 
 fn handle_bird_death(i: usize, birds: &mut Vec<Bird>) {
-    // TODO implement all of the nn learning stuff
+    // TODO: implement all of the nn learning stuff
     birds.remove(i);
 }
 
