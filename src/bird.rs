@@ -32,8 +32,23 @@ impl Bird {
         )
     }
 
+    fn limit_velocity(&mut self) {
+        if self.velocity > 10.0 {
+            self.velocity = 10.0;
+        }
+        if self.velocity < -10.0 {
+            self.velocity = -10.0;
+        }
+    }
+
     pub fn update(&mut self) {
-        self.velocity += 0.1;
+        self.velocity += 0.35;
         self.y += self.velocity;
+        self.limit_velocity();
+    }
+
+    pub fn flap(&mut self, force: f64) {
+        self.velocity -= force;
+        self.limit_velocity();
     }
 }

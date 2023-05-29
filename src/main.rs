@@ -27,6 +27,7 @@ fn handle_pipes(pipes: &mut Vec<Pipe>, pipe_gap: f64, pipe_speed: f64) {
 fn main() {
     let mut birds: Vec<Bird> = Vec::new();
     let num_birds = 100;
+    let flap_force = 12.0;
 
     for _ in 0..num_birds {
         birds.push(Bird::new());
@@ -37,7 +38,7 @@ fn main() {
     let pipe_gap = 350.0;
     let pipe_speed = 4.0;
 
-    let mut window: PistonWindow = WindowSettings::new("Test App", [WIDTH, HEIGHT])
+    let mut window: PistonWindow = WindowSettings::new("Flappy Bird AI", [WIDTH, HEIGHT])
         .exit_on_esc(true)
         .build()
         .unwrap();
@@ -51,5 +52,15 @@ fn main() {
             birds.iter_mut().for_each(|bird| bird.update());
             birds.iter().for_each(|bird| bird.draw(&context, graphics));
         });
+
+        // Keyboard input
+        if let Some(Button::Keyboard(key)) = event.press_args() {
+            match key {
+                Key::Space => {
+                    birds.iter_mut().for_each(|bird| bird.flap(flap_force));
+                }
+                _ => {}
+            }
+        }
     }
 }
