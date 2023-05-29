@@ -1,7 +1,7 @@
 extern crate piston_window;
 use piston_window::*;
 
-use crate::GROUND_HEIGHT;
+use crate::{pipe::Pipe, GROUND_HEIGHT};
 
 pub struct Bird {
     x: f64,
@@ -57,6 +57,19 @@ impl Bird {
         return false;
     }
 
+    pub fn check_collision(&self, pipes: &Vec<Pipe>) -> bool {
+        for pipe in pipes {
+            if self.x + self.radius < pipe.x || self.x - self.radius > pipe.x + pipe.width {
+                continue;
+            }
+
+            if self.y - self.radius < pipe.top_gap || self.y + self.radius > pipe.bottom_gap {
+                return true;
+            }
+        }
+
+        return false;
+    }
     pub fn flap(&mut self, force: f64) {
         self.velocity -= force;
         self.limit_velocity();

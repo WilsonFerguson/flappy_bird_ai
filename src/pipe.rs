@@ -7,9 +7,9 @@ use crate::{HEIGHT, WIDTH};
 
 pub struct Pipe {
     pub x: f64,
-    width: f64,
-    top_gap: f64,
-    bottom_gap: f64,
+    pub width: f64,
+    pub top_gap: f64,
+    pub bottom_gap: f64,
 }
 
 impl Pipe {

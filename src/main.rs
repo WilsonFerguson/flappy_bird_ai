@@ -25,9 +25,12 @@ fn handle_pipes(pipes: &mut Vec<Pipe>, pipe_gap: f64, pipe_speed: f64) {
     }
 }
 
-fn handle_birds(birds: &mut Vec<Bird>) {
+fn handle_birds(birds: &mut Vec<Bird>, pipes: &Vec<Pipe>) {
     for i in (0..birds.len()).rev() {
-        let dead = birds.get_mut(i).unwrap().update();
+        let mut dead = birds.get_mut(i).unwrap().update();
+        if !dead {
+            dead = birds.get_mut(i).unwrap().check_collision(pipes);
+        }
         if dead {
             handle_bird_death(i, birds);
         }
@@ -42,7 +45,7 @@ fn handle_bird_death(i: usize, birds: &mut Vec<Bird>) {
 fn main() {
     let mut birds: Vec<Bird> = Vec::new();
     let num_birds = 100;
-    let flap_force = 12.0;
+    let flap_force = 7.0;
 
     for _ in 0..num_birds {
         birds.push(Bird::new());
@@ -64,7 +67,7 @@ fn main() {
             handle_pipes(&mut pipes, pipe_gap, pipe_speed);
             pipes.iter().for_each(|pipe| pipe.draw(&context, graphics));
 
-            handle_birds(&mut birds);
+            handle_birds(&mut birds, &pipes);
             birds.iter().for_each(|bird| bird.draw(&context, graphics));
 
             // Draw the ground
