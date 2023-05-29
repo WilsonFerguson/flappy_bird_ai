@@ -9,6 +9,7 @@ use pipe::Pipe;
 
 pub static WIDTH: u32 = 1280;
 pub static HEIGHT: u32 = 720;
+pub static GROUND_HEIGHT: u32 = (HEIGHT as f64 * 0.9) as u32;
 
 fn handle_pipes(pipes: &mut Vec<Pipe>, pipe_gap: f64, pipe_speed: f64) {
     if let Some(pipe) = pipes.last() {
@@ -22,6 +23,20 @@ fn handle_pipes(pipes: &mut Vec<Pipe>, pipe_gap: f64, pipe_speed: f64) {
             pipes.remove(i);
         }
     }
+}
+
+fn handle_birds(birds: &mut Vec<Bird>) {
+    for i in (0..birds.len()).rev() {
+        let dead = birds.get_mut(i).unwrap().update();
+        if dead {
+            handle_bird_death(i, birds);
+        }
+    }
+}
+
+fn handle_bird_death(i: usize, birds: &mut Vec<Bird>) {
+    // TODO implement all of the nn learning stuff
+    birds.remove(i);
 }
 
 fn main() {
@@ -49,8 +64,21 @@ fn main() {
             handle_pipes(&mut pipes, pipe_gap, pipe_speed);
             pipes.iter().for_each(|pipe| pipe.draw(&context, graphics));
 
-            birds.iter_mut().for_each(|bird| bird.update());
+            handle_birds(&mut birds);
             birds.iter().for_each(|bird| bird.draw(&context, graphics));
+
+            // Draw the ground
+            rectangle(
+                [0.53, 0.29, 0.12, 1.0],
+                [
+                    0.0,
+                    GROUND_HEIGHT as f64,
+                    WIDTH as f64,
+                    HEIGHT as f64 - GROUND_HEIGHT as f64,
+                ],
+                context.transform,
+                graphics,
+            );
         });
 
         // Keyboard input

@@ -1,6 +1,8 @@
 extern crate piston_window;
 use piston_window::*;
 
+use crate::GROUND_HEIGHT;
+
 pub struct Bird {
     x: f64,
     y: f64,
@@ -20,7 +22,7 @@ impl Bird {
 
     pub fn draw(&self, context: &Context, graphics: &mut G2d) {
         ellipse(
-            [0.3, 0.8, 0.4, 0.3],
+            [0.92, 0.25, 0.2, 1.0],
             [
                 self.x - self.radius,
                 self.y - self.radius,
@@ -41,10 +43,18 @@ impl Bird {
         }
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self) -> bool {
         self.velocity += 0.35;
         self.y += self.velocity;
+
         self.limit_velocity();
+
+        if self.y > GROUND_HEIGHT as f64 {
+            self.y = GROUND_HEIGHT as f64;
+            return true;
+        }
+
+        return false;
     }
 
     pub fn flap(&mut self, force: f64) {
