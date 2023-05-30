@@ -1,19 +1,21 @@
 use rand::{thread_rng, Rng};
 
+#[derive(Clone)]
 pub struct NeuralNetwork {
     hidden_layers: Vec<Layer>,
     output_layer: Layer,
 }
 
+#[derive(Clone)]
 pub struct Layer {
     pub biases: Vec<f64>,
     pub weights: Vec<Vec<f64>>,
 }
 
 impl NeuralNetwork {
-    pub fn new(num_layers: &[usize]) -> Option<Self> {
+    pub fn new(num_layers: &[usize]) -> Self {
         if num_layers.len() < 3 {
-            return None;
+            panic!("Neural network must have at least 3 layers");
         }
 
         let mut hidden_layers = Vec::new();
@@ -29,10 +31,10 @@ impl NeuralNetwork {
             *num_layers.get(num_layers.len() - 2).unwrap(),
         );
 
-        Some(Self {
+        Self {
             hidden_layers,
             output_layer,
-        })
+        }
     }
 
     pub fn feed_forward(&self, inputs: &Vec<f64>) -> Vec<f64> {
@@ -70,7 +72,12 @@ impl NeuralNetwork {
 
 impl Layer {
     pub fn new(neuron_count: usize, prev_nueron_count: usize) -> Self {
-        let biases = vec![0.0; neuron_count];
+        // let biases = vec![0.0; neuron_count]; // java version did this I think
+        // Randomize the biases.
+        let mut biases = Vec::new();
+        for _ in 0..neuron_count {
+            biases.push(thread_rng().gen_range(-1.0..1.0));
+        }
 
         let mut weights = Vec::new();
         for _ in 0..neuron_count {
