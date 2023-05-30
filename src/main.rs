@@ -105,7 +105,7 @@ fn next_generation(birds: &mut Vec<Bird>, finished_birds: &mut Vec<Bird>, pipes:
 
 fn main() {
     let mut birds: Vec<Bird> = Vec::new();
-    let num_birds = 30;
+    let num_birds = 50;
     for _ in 0..num_birds {
         birds.push(Bird::new());
     }
@@ -119,6 +119,7 @@ fn main() {
     let pipe_speed = 4.0;
 
     let start_time = Instant::now();
+    let mut num_times_per_frame: usize = 3;
 
     let mut window: PistonWindow = WindowSettings::new("Flappy Bird AI", [WIDTH, HEIGHT])
         .exit_on_esc(true)
@@ -128,16 +129,18 @@ fn main() {
         window.draw_2d(&event, |context, graphics, _device| {
             clear([0.1; 4], graphics);
 
-            handle_pipes(&mut pipes, pipe_gap, pipe_speed);
-            pipes.iter().for_each(|pipe| pipe.draw(&context, graphics));
+            for _ in 0..num_times_per_frame {
+                handle_pipes(&mut pipes, pipe_gap, pipe_speed);
+                pipes.iter().for_each(|pipe| pipe.draw(&context, graphics));
 
-            handle_birds(&mut birds, &mut finished_birds, &pipes);
-            birds.iter().for_each(|bird| bird.draw(&context, graphics));
+                handle_birds(&mut birds, &mut finished_birds, &pipes);
+                birds.iter().for_each(|bird| bird.draw(&context, graphics));
 
-            if birds.len() == 0 {
-                next_generation(&mut birds, &mut finished_birds, &mut pipes);
-                generation += 1;
-                println!("New Generation. Now on generation #{}.", generation);
+                if birds.len() == 0 {
+                    next_generation(&mut birds, &mut finished_birds, &mut pipes);
+                    generation += 1;
+                    println!("New Generation. Now on generation #{}.", generation);
+                }
             }
 
             // Draw the ground
@@ -159,6 +162,14 @@ fn main() {
             match key {
                 Key::Space => {
                     birds.iter_mut().for_each(|bird| bird.flap());
+                }
+                Key::Right => {
+                    num_times_per_frame += 1;
+                }
+                Key::Left => {
+                    if num_times_per_frame > 1 {
+                        num_times_per_frame -= 1;
+                    }
                 }
                 _ => {}
             }

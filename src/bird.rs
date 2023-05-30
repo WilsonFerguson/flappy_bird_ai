@@ -91,8 +91,9 @@ impl Bird {
     pub fn auto_fly(&mut self, pipe: &Pipe) {
         let gap_center = (pipe.top_gap + pipe.bottom_gap) / 2.0;
 
-        let inputs: Vec<f64> = vec![self.velocity, self.y - gap_center]; // maybe
-                                                                         // make 3rd arg "gap_center - self.y"?
+        let input_y_diff = gap_center - self.y; // Maybe reverse these?
+        let inputs: Vec<f64> = vec![self.velocity, input_y_diff];
+
         let outputs = self.brain.feed_forward(&inputs);
         if outputs[0] > outputs[1] {
             self.flap();
