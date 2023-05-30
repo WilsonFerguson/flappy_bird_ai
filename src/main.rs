@@ -16,7 +16,7 @@ pub static WIDTH: u32 = 1280;
 pub static HEIGHT: u32 = 720;
 pub static GROUND_HEIGHT: u32 = (HEIGHT as f64 * 0.9) as u32;
 
-pub static NEURAL_NETWORK_STRUCTURE: &[usize] = &[2, 5, 3, 2];
+pub static NEURAL_NETWORK_STRUCTURE: &[usize] = &[2, 3, 2]; // 2 5 3 2
 pub static FLAP_FORCE: f64 = 6.0;
 
 fn handle_pipes(pipes: &mut Vec<Pipe>, pipe_gap: f64, pipe_speed: f64) {
